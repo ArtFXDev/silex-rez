@@ -19,7 +19,7 @@ variants = [["platform-windows"]]
 
 def commands():
     # Set this variable to your houdini install path
-    houdini_install_path = "C:/Houdini18/bin"
+    houdini_install_path = "C:/Houdini18"
 
     env.PATH.append(f"{houdini_install_path}/bin")  # noqa
     env.PYTHONPATH.append(f"{houdini_install_path}/python37/lib/site-packages")  # noqa
