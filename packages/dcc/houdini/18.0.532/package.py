@@ -25,3 +25,4 @@ def commands():
     env.PYTHONPATH.append(f"{houdini_install_path}/python27/lib/site-packages")  # noqa
     env.PYTHONPATH.append(f"{houdini_install_path}/houdini/python2.7libs")  # noqa
     env.PATH.append(f"{houdini_install_path}/toolkit/include")  # noqa
+    env.HOUDINIPATH.append(f"{houdini_install_path}/houdini")
