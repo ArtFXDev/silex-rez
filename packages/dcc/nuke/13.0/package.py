@@ -21,6 +21,7 @@ tools = [
 
 
 def commands():
+    import os
     # Set this variable to your nuke install path
     nuke_install_path = "C:/Nuke13.0v3"
 
@@ -28,4 +29,7 @@ def commands():
     env.PYTHONPATH.append(f"{nuke_install_path}/pythonextensions/site-packages")  # noqa
     env.QT_PLUGIN_PATH.append(f"{nuke_install_path}/qtplugins")  # noqa
     env.PATH.append(f"{nuke_install_path}/include")  # noqa
+    os.environ["nuke"] = f"{nuke_install_path}/Nuke13.0.exe"
+    
+    
 
