@@ -23,4 +23,3 @@ def commands(env, root):
     env.QT_QPA_PLATFORM_PLUGIN_PATH = f"{env.HFS}/bin/Qt_plugins/platforms"
     env.HOUDINI13_VOLUME_COMPATIBILITY=1
     env.HDF5_DISABLE_VERSION_CHECK=1
-   

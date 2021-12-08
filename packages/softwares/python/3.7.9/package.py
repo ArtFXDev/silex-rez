@@ -9,6 +9,7 @@ tools = ['python']
 
 def commands():
     env.PATH.append('C:\Program Files\Python37')
+    env.PATH.append('C:\Python37')
 
 timestamp = 1632129053
 
