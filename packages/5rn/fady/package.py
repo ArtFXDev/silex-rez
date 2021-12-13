@@ -16,6 +16,14 @@ format_version = 2
 
 
 
-def command():
-    env.HOUDINI_PATH.append('"C:/Users/etudiant/Documents/houdini18.5/DMNK-Tools-master"') 
-    env.HOUDINI_PATH.append("C:/Users/etudiant/Documents/houdini18.5/MOPS") 
+
+def commands():
+    """
+    Set the environment variables for Houdini
+    """
+
+    #DMNK TOOLS
+    env.HOUDINI_PATH.append("C:/Users/etudiant/Documents/houdini18.5/DMNK-Tools-master")
+
+    #MOPS
+    env.HOUDINI_PATH.append("C:/Users/etudiant/Documents/houdini18.5/MOPS")
