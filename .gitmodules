@@ -22,3 +22,11 @@
 	path = packages/silex/silex_client/beta.0.1.0
 	url = https://github.com/ArtFXDev/silex_client.git
 	branch = beta
+[submodule "packages/silex/silex_nuke/beta.0.1.0"]
+	path = packages/silex/silex_nuke/beta.0.1.0
+	url = https://github.com/ArtFXDev/silex_nuke.git
+	branch = beta
+[submodule "packages/silex/silex_nuke/prod.0.1.0"]
+	path = packages/silex/silex_nuke/prod.0.1.0
+	url = https://github.com/ArtFXDev/silex_nuke.git
+	branch = prod
