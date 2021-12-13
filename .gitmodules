@@ -1,0 +1,28 @@
+[submodule "packages/silex/silex_maya/beta.0.1.0"]
+	path = packages/silex/silex_maya/beta.0.1.0
+	url = https://github.com/ArtFXDev/silex_maya.git
+	branch = beta
+[submodule "packages/silex/silex_maya/prod.0.1.0"]
+	path = packages/silex/silex_maya/prod.0.1.0
+	url = https://github.com/ArtFXDev/silex_maya.git
+	branch = prod
+[submodule "packages/silex/silex_houdini/beta.0.1.0"]
+	path = packages/silex/silex_houdini/beta.0.1.0
+	url = https://github.com/ArtFXDev/silex_houdini.git
+	branch = beta
+[submodule "packages/silex/silex_houdini/prod.0.1.0"]
+	path = packages/silex/silex_houdini/prod.0.1.0
+	url = https://github.com/ArtFXDev/silex_houdini.git
+	branch = prod
+[submodule "packages/silex/silex_client/prod.0.1.0"]
+	path = packages/silex/silex_client/prod.0.1.0
+	url = https://github.com/ArtFXDev/silex_client.git
+	branch = prod
+[submodule "packages/silex/silex_client/beta.0.1.0"]
+	path = packages/silex/silex_client/beta.0.1.0
+	url = https://github.com/ArtFXDev/silex_client.git
+	branch = beta
+[submodule "packages/silex/aiogazu/1.0.0"]
+	path = packages/silex/aiogazu/1.0.0
+	url = https://github.com/ArtFXDev/aiogazu.git
+	branch = master
