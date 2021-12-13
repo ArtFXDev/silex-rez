@@ -60,4 +60,4 @@ git submodule update --remote
 
 ## Config
 
-This repository use .rez to step down recusrsively in folders tree. Algorithm to find '.rez' files are defined in [this](https://github.com/ArtFXDev/silex_fog_snapin/blob/main/rez/config/rezconfig.py) rezconfig.py 
+This repository use .rez to step down recursively in folders tree. Algorithm to find '.rez' files are defined in [this](https://github.com/ArtFXDev/silex_fog_snapin/blob/main/rez/config/rezconfig.py) rezconfig.py 
