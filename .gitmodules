@@ -30,3 +30,7 @@
 	path = packages/silex/silex_nuke/prod.0.1.0
 	url = https://github.com/ArtFXDev/silex_nuke.git
 	branch = prod
+[submodule "packages/softwares/0.1.0"]
+	path = packages/softwares/0.1.0
+	url = https://github.com/ArtFXDev/tractor_lib.git
+	branch = main
