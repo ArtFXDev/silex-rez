@@ -1,21 +1,12 @@
-# -*- coding: utf-8 -*-
-name = 'fady'
-version = '1.0'
+name = "fady"
+version = "1.0"
 
-authors = ['ArtFx TD gang']
+authors = ["ArtFx TD gang"]
 
 requires = [
-    'vray',
-    'aces',
+    "vray",
+    "aces",
 ]
-
-timestamp = 1635410671
-
-vcs = 'git'
-
-format_version = 2
-
-
 
 
 def commands():
@@ -23,8 +14,11 @@ def commands():
     Set the environment variables for Houdini
     """
 
-    #DMNK TOOLS
+    # DMNK TOOLS
     env.HOUDINI_PATH.append("C:/Users/etudiant/Documents/houdini18.5/DMNK-Tools-master")
 
-    #MOPS
+    # MOPS
     env.HOUDINI_PATH.append("C:/Users/etudiant/Documents/houdini18.5/MOPS")
+
+    # rvu packages
+    env.HOUDINI_PACKAGE_DIR.append("C:/Users/etudiant/Documents/houdini18.5/packages")
