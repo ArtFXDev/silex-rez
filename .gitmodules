@@ -34,3 +34,6 @@
 	path = packages/softwares/tractor/0.1.0
 	url = https://github.com/ArtFXDev/tractor_lib.git
 	branch = main
+[submodule "packages/silex/aiogazu/1.0.0"]
+	path = packages/silex/aiogazu/1.0.0
+	url = https://github.com/ArtFXDev/aiogazu.git
