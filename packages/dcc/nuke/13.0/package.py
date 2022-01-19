@@ -28,6 +28,9 @@ def commands():
     # Alias nuke13.0 to nuke for silex launch...
     env.SILEX_DCC_BIN = "nuke13.0"
 
+    # Alias nuke command in the shell
+    alias("nuke", "nuke13.0")
+
     env.PATH.append(f"{nuke_install_path}")  # noqa
     env.PYTHONPATH.append(f"{nuke_install_path}/pythonextensions/site-packages")  # noqa
     env.QT_PLUGIN_PATH.append(f"{nuke_install_path}/qtplugins")  # noqa
