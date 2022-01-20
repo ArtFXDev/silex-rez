@@ -6,8 +6,11 @@ variants = [
     ["houdini"],
 ]
 
+
 def commands():
-    import sys
-    sys.path.append(root)
     import vrayenv
+
+    vray_install_path = "C:/Maya2022/Maya2022/vray/bin"
+    env.PATH.append(vray_install_path)
+
     vrayenv.commands(env, root)
