@@ -29,7 +29,7 @@ def commands():
     env.SILEX_DCC_BIN = "nuke13.0"
 
     # Alias nuke command in the shell
-    alias("nuke", "nuke13.0")
+    alias("nuke", "nuke13.0 --nukex")
 
     env.PATH.append(f"{nuke_install_path}")  # noqa
     env.PYTHONPATH.append(f"{nuke_install_path}/pythonextensions/site-packages")  # noqa
