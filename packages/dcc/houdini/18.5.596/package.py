@@ -13,6 +13,8 @@ tools = [
 ]
 
 def commands():
+    env.PYTHONPATH.append(root)  # noqa
+
     # Set this variable to your houdini install path
     houdini_install_path = "C:/Houdini18"
     env.HFS.set(houdini_install_path)
