@@ -234,6 +234,10 @@ def render(args):
 
     rop_node = get_output_node(args)
 
+    if rop_node is None:
+        print(f'ERROR: The given ROP node: "{args.d_option}" doesn\'t exist!')
+        sys.exit(-1)
+
     set_aspect_ratio(args, rop_node)
     set_overrides(args, rop_node)
     frame_range = set_frame_range(args, rop_node)
