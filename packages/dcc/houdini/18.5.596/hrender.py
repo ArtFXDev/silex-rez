@@ -131,9 +131,6 @@ def parse_args():
     if err:
         usage(err)
 
-    print(args.o_option)
-    sys.exit()
-
     return args
 
 
