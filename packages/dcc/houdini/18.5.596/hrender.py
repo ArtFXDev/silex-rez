@@ -235,7 +235,7 @@ def render(args):
     rop_node = get_output_node(args)
 
     if rop_node is None:
-        print(f'ERROR: The given ROP node: "{args.d_option}" doesn\'t exist!')
+        print('ERROR: The given ROP node: "{}" doesn\'t exist!'.format(args.d_option))
         sys.exit(-1)
 
     set_aspect_ratio(args, rop_node)
