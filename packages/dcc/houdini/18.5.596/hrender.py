@@ -192,9 +192,13 @@ def set_overrides(args, rop_node):
         else:
             output_file_parm = "vm_picture"
 
-            # If it's a V-Ray render
+            # V-Ray ROP
             if rop_node.type().name() == "vray_renderer":
                 output_file_parm = "SettingsOutput_img_file_path"
+
+            # Redshift
+            if rop_node.type().name() == "Redshift_ROP":
+                output_file_parm = "RS_outputFileNamePrefix"
 
             rop_node.parm(output_file_parm).set(args.o_option.replace("\\", "/"))
 
