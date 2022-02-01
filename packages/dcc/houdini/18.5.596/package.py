@@ -25,5 +25,6 @@ def commands():
     env.HOUDINI_PATH.append(f"{houdini_install_path}/houdini")  # noqa
 
     env.HOUDINI_NO_ENV_FILE = 1 # noqa
+    env.HOUDINI_ACCESS_METHOD  = 2 # noqa needed to stream abc/fbx on network
     #env.HOUDINI_PACKAGE_SKIP = 1 # noqa
 
