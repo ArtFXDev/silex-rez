@@ -34,13 +34,14 @@ options:        -w pixels       Output width
                 -h pixels       Output height
                 -F frame        Single frame
                 -b fraction     Image processing fraction (0.01 to 1.0)
-                -t take		Render a specified take
+                -t take		    Render a specified take
                 -o output       Output name specification
                 -v              Run in verbose mode
                 -I              Interleaved, hscript render -I
 
-with \"-e\":	-f start end    Frame range start and end
+            	-f f1;f2;f3     List of frames separated by semi-colon
                 -i increment    Frame increment
+                -S              Skip existing frames
 
 Notes:  1)  For output name use $F to specify frame number (e.g. -o $F.pic).
         2)  If only one of width (-w) or height (-h) is specified, aspect ratio
@@ -65,12 +66,6 @@ def validate_args(args):
         return "Cannot find file %s." % hipfiles[0]
 
     args.file = hipfiles[0]
-
-    if args.frame_range:
-        if not args.e_option:
-            return "Cannot specify frame range without -e."
-        if args.frame_range[0] > args.frame_range[1]:
-            return "Start frame cannot be greater than end frame."
 
     if args.i_option:
         if not args.e_option:
@@ -109,16 +104,16 @@ def parse_args():
     parser.add_argument("-b", dest="b_option", type=float)
     parser.add_argument("-j", dest="threads", type=int)
     parser.add_argument("-F", dest="frame", type=float)
-    parser.add_argument("-f", dest="frame_range", nargs=2, type=float)
+    parser.add_argument("-f", dest="frames")
 
     # .hip|.hiplc|.hipnc file
     parser.add_argument("file", nargs="*")
 
     # Boolean flags
-    parser.add_argument("-e", dest="e_option", action="store_true")
     parser.add_argument("-R", dest="renderonly", action="store_true")
     parser.add_argument("-v", dest="v_option", action="store_true")
     parser.add_argument("-I", dest="I_option", action="store_true")
+    parser.add_argument("-S", dest="skip_existing", action="store_true")
 
     args, unknown = parser.parse_known_args()
 
@@ -244,15 +239,36 @@ def render(args):
 
     set_aspect_ratio(args, rop_node)
     set_overrides(args, rop_node)
-    frame_range = set_frame_range(args, rop_node)
+
+    # Set the range parameter to single frame
+    rop_node.parm("trange").set(1)
+
+    frames = list(map(int, args.frames.split(";")))
 
     interleave = (
         hou.renderMethod.FrameByFrame if args.I_option else hou.renderMethod.RopByRop
     )
 
-    rop_node.render(
-        verbose=bool(args.v_option), frame_range=frame_range, method=interleave
-    )
+    print("\nSTART RENDERING\n")
+
+    for frame in frames:
+        if args.skip_existing:
+            output_file = hou.text.expandStringAtFrame(args.o_option, frame)
+            if os.path.exists(output_file):
+                print("Skipping frame {} because it already exists\n".format(frame))
+                continue
+
+        try:
+            rop_node.render(
+                verbose=bool(args.v_option),
+                frame_range=(frame, frame, 1),
+                method=interleave,
+            )
+        except Exception as e:
+            print("ROP node render Exception found: {e}".format(e))
+            sys.exit(-1)
+
+    print("END RENDERING\n")
 
 
 # --------------------------------------------------------
@@ -265,4 +281,3 @@ if len(args) < 1 or args[0] == "-":
 
 args = parse_args()
 render(args)
-
