@@ -22,8 +22,8 @@ def error(msg, exit=True):
 # Taken from https://codereview.stackexchange.com/questions/37285/efficient-human-readable-timedelta
 def readable_timedelta(duration):
     data = {}
-    data["days"], remaining = divmod(duration.total_seconds(), 86_400)
-    data["hours"], remaining = divmod(remaining, 3_600)
+    data["days"], remaining = divmod(duration.total_seconds(), 86400)
+    data["hours"], remaining = divmod(remaining, 3600)
     data["minutes"], data["seconds"] = divmod(remaining, 60)
 
     time_parts = [
