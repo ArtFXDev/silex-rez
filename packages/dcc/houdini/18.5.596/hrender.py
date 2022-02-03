@@ -3,6 +3,7 @@ from __future__ import print_function
 import argparse
 import os
 import sys
+from datetime import datetime
 
 #!/usr/bin/env hython
 
@@ -16,6 +17,33 @@ def error(msg, exit=True):
     sys.stderr.write("\n")
     if exit:
         sys.exit(1)
+
+
+# Taken from https://codereview.stackexchange.com/questions/37285/efficient-human-readable-timedelta
+def readable_timedelta(duration):
+    data = {}
+    data["days"], remaining = divmod(duration.total_seconds(), 86_400)
+    data["hours"], remaining = divmod(remaining, 3_600)
+    data["minutes"], data["seconds"] = divmod(remaining, 60)
+
+    time_parts = [
+        "{} {}".format(round(value), name) for name, value in data.items() if value > 0
+    ]
+    if time_parts:
+        return " ".join(time_parts)
+    else:
+        return "below 1 second"
+
+
+def log_message(msg, content="", limit=False):
+    print(
+        "[{}] [hrender]  {}".format(datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), msg)
+    )
+
+    if limit:
+        print("-" * 20)
+        print(content)
+        print("-" * 20)
 
 
 def usage(msg=""):
@@ -226,15 +254,26 @@ def set_frame_range(args, rop_node):
 
 
 def render(args):
+    log_message("LOADING FILE: {}".format(args.file))
+    before_load_time = datetime.now()
     try:
         hou.hipFile.load(args.file)
     except hou.LoadWarning as e:
-        print(e)
+        log_message("SCENE LOADING WARNINGS", content=e, limit=True)
+
+    after_load_time = datetime.now()
+    log_message(
+        "FILE LOADED in {}".format(
+            readable_timedelta(after_load_time - before_load_time)
+        ),
+    )
 
     rop_node = get_output_node(args)
 
     if rop_node is None:
-        print('ERROR: The given ROP node: "{}" doesn\'t exist!'.format(args.d_option))
+        log_message(
+            'ERROR: The given ROP node: "{}" doesn\'t exist!'.format(args.d_option)
+        )
         sys.exit(-1)
 
     set_aspect_ratio(args, rop_node)
@@ -249,13 +288,16 @@ def render(args):
         hou.renderMethod.FrameByFrame if args.I_option else hou.renderMethod.RopByRop
     )
 
-    print("\nSTART RENDERING\n")
+    log_message("START RENDERING")
 
     for frame in frames:
+        before_frame = datetime.now()
         if args.skip_existing:
             output_file = hou.text.expandStringAtFrame(args.o_option, frame)
             if os.path.exists(output_file):
-                print("Skipping frame {} because it already exists\n".format(frame))
+                log_message(
+                    "SKIP FRAME {} (file {} already exists)".format(frame, output_file)
+                )
                 continue
 
         try:
@@ -268,7 +310,18 @@ def render(args):
             print("ROP node render Exception found: {e}".format(e))
             sys.exit(-1)
 
-    print("END RENDERING\n")
+        after_frame = datetime.now()
+        log_message(
+            "FRAME {} took {} to render".format(
+                frame, readable_timedelta(after_frame - before_frame)
+            )
+        )
+
+        print()
+        print("-" * 20)
+        print()
+
+    log_message("END RENDERING")
 
 
 # --------------------------------------------------------
