@@ -26,7 +26,7 @@ variants = [
     ["platform-windows"]
 ]
 
-def commands();
+def commands():
     import sys
     sys.path.append(root)
     import mayaenv
