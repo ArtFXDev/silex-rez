@@ -1,9 +1,17 @@
 name = "blender"
 version = "2.93"
 
-# requires = [
-#     "python-3.9.2",
-# ]
+tools = [
+    "blender"
+]
+
+variants = [
+    ["platform-windows"],
+    ["platform-linux"],
+]
 
 def commands():
-    env.PATH.append(r"C:\Program Files\Blender Foundation\Blender 2.93")
+    import sys
+    sys.path.append(root)
+    import blenderenv
+    blenderenv.commands(env, root)
