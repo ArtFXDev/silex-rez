@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# ensure everything is mount
+mount -av
+
+# rename parameter
+nas_name=$1
+
+# Execute command only for 'ana' or 'tars'
+if [[ "$nas_name" != "ana" ]] && [[ "$nas_name" != "tars" ]]
+then
+    echo "Invalid NAS name"
+    exit 0
+fi
+
+# create dir if not exist
+if [ -d P:/ ]; then
+	unlink P:
+fi
+
+# Clear all symlink
+# find P:/ -maxdepth 1 -type l ! -name '.*' -delete 
+
+
+# Create symlink to each project
+echo $nas_name
+ln -sf /mnt/$nas_name P:
