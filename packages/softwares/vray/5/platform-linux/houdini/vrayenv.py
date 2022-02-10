@@ -1,2 +1,2 @@
 def commands(env, root):
-    pass
+    env.PATH.append("/usr/ChaosGroup/V-Ray/Standalone_for_centos6/bin/")
