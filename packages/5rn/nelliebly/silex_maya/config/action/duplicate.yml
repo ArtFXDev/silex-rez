@@ -1,0 +1,10 @@
+duplicate:
+  thumbnail: "copySkinWeight.png"
+  steps:
+    duplicate:
+      label: "Duplicate node"
+      index: 50
+      commands:
+        duplicate:
+          path: "nelliebly.commands.duplicate_node.DuplicateNode"
+          ask_user: True
