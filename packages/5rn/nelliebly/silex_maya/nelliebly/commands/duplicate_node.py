@@ -63,4 +63,4 @@ class DuplicateNode(CommandBase):
 
             for selected_node in selected_nodes:
                 duplicated = await execute_in_main_thread(cmds.duplicate, selected_node)
-                await execute_in_main_thread(cmds.parent, duplicated, transform)
+                await execute_in_main_thread(cmds.parent, duplicated, transform, relative=True)
