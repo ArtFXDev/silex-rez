@@ -18,9 +18,6 @@ variants = [
 ]
 
 def commands():
-    print(root)
-    env.PYTHONPATH.append(root)
-    env.PATH.append(root)
     import sys
     
     sys.path.append(root)

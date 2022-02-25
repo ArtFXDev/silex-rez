@@ -221,6 +221,7 @@ def set_overrides(args, rop_node):
 
             # Redshift
             if rop_node.type().name() == "Redshift_ROP":
+                hou.hscript("Redshift_setLogLevel -L 5")
                 output_file_parm = "RS_outputFileNamePrefix"
 
             rop_node.parm(output_file_parm).set(args.o_option.replace("\\", "/"))
@@ -253,7 +254,22 @@ def set_frame_range(args, rop_node):
     return frame_range
 
 
+def is_frame_skipped(o_option, frame):
+    output_file = hou.text.expandStringAtFrame(o_option, frame)
+    if os.path.exists(output_file):
+        log_message("SKIP FRAME {} (file {} already exists)".format(frame, output_file))
+        return True
+    return False
+
+
 def render(args):
+    frames = list(map(int, args.frames.split(";")))
+
+    if args.skip_existing:
+        if all([is_frame_skipped(args.o_option, frame) for frame in frames]):
+            log_message("ALL THE FRAMES WERE SKIPPED")
+            sys.exit(0)
+
     log_message("LOADING FILE: {}".format(args.file))
     before_load_time = datetime.now()
     try:
@@ -282,8 +298,6 @@ def render(args):
     # Set the range parameter to single frame
     rop_node.parm("trange").set(1)
 
-    frames = list(map(int, args.frames.split(";")))
-
     interleave = (
         hou.renderMethod.FrameByFrame if args.I_option else hou.renderMethod.RopByRop
     )
@@ -292,13 +306,8 @@ def render(args):
 
     for frame in frames:
         before_frame = datetime.now()
-        if args.skip_existing:
-            output_file = hou.text.expandStringAtFrame(args.o_option, frame)
-            if os.path.exists(output_file):
-                log_message(
-                    "SKIP FRAME {} (file {} already exists)".format(frame, output_file)
-                )
-                continue
+        if args.skip_existing and is_frame_skipped(args.o_option, frame):
+            continue
 
         try:
             rop_node.render(

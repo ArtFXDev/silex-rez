@@ -6,11 +6,11 @@ variants = [
     ["platform-windows", "houdini"],
     ["platform-linux", "maya"],
     ["platform-linux", "houdini"],
+    ["platform-linux"],
 ]
 
 def commands():
     import sys
-
     sys.path.append(root)
 
     import vrayenv

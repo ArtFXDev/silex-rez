@@ -26,6 +26,9 @@ variants = [
 
 def commands():
     import sys
+
+    # Alias nuke command in the shell
+    alias("nuke", "nuke13.0 --nukex")
     
     sys.path.append(root)
     import nukeenv

@@ -1,2 +1,2 @@
 def commands(env, root):
-    env.PATH.append(r"C:\Program Files\Blender Foundation\Blender 2.93")
+    env.PATH.append("/opt/blender_foundation/blender-2.93.8-linux-x64")

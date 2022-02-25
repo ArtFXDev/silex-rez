@@ -1,5 +1,9 @@
 def commands(env, root):
-    houdini_install_path = "/opt/hfs18.5.596"
+    print(root)
+    env.PYTHONPATH.append(root)
+    env.PATH.append(root)
+   
+    houdini_install_path = "/opt/hfs18.5.759"
 
     env.HFS.set(houdini_install_path)
     env.PATH.append(f"{houdini_install_path}/bin")
