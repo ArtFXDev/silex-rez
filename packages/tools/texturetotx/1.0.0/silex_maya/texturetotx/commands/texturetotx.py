@@ -1,4 +1,5 @@
 from __future__ import annotations
+from array import array
 from cmath import exp
 
 import typing
@@ -39,7 +40,7 @@ class TextureToTx(CommandBase):
         }
     }
 
-    async def prompt_filepath(self, file_paths, action_query):
+    async def prompt_filepath(self, file_paths: List[str], action_query: ActionQuery):
         """
         Info box on action
         """
@@ -54,7 +55,7 @@ class TextureToTx(CommandBase):
 
         await self.prompt_user(action_query, {"info": info_parameter})
 
-    def get_textures_file_path(self):
+    def get_textures_file_path(self) -> Dict[str, Dict[str,str]]:
         """
         Return texturepath for each maya node file
         """
@@ -66,7 +67,7 @@ class TextureToTx(CommandBase):
             for node in cmds.ls(type="file")
         }
 
-    def get_expand_path(self, file_path: Path):
+    def get_expand_path(self, file_path: Path) -> Dict[str, str]:
         """
         return expand_path from utils
         """
@@ -90,13 +91,13 @@ class TextureToTx(CommandBase):
 
         return version_path.parent
 
-    def set_texture_attribute(self, attribute, node, value):
+    def set_texture_attribute(self, attribute: str, node: str, value: str):
         """
         Set path to node file maya.
         """
         cmds.setAttr(f"{node}.{attribute}", value, type="string")
 
-    async def exec_make_tx(self, input_file: str, out_file: str, logger):
+    async def exec_make_tx(self, input_file: str, out_file: str):
         """
         Launch the maketx process to convert tx in background
         """
@@ -105,9 +106,8 @@ class TextureToTx(CommandBase):
             .param("o", out_file)
             .value(input_file)
         )
-        logger.error(batch_cmd)
         await thread_client.execute_in_thread(
-            subprocess.call, batch_cmd.as_argv(), shell=False
+            subprocess.call, batch_cmd.as_argv(), shell=True
         )
 
     @CommandBase.conform_command()
@@ -123,13 +123,10 @@ class TextureToTx(CommandBase):
 
         # Export obj to fbx
         file_nodes_paths = await execute_in_main_thread(self.get_textures_file_path)
-        logger.error(file_nodes_paths)
-        logger.error(file_nodes_paths.items())
-
+        
         file_nodes_paths = {
             n: p for n, p in file_nodes_paths.items() if Path(p["file"]).suffix != ".tx"
         }
-        logger.error(file_nodes_paths)
 
         file_paths = [p["file"] for p in file_nodes_paths.values()]
         if len(file_paths) > 0:
@@ -154,7 +151,7 @@ class TextureToTx(CommandBase):
             # If keep existing and tx already exist
             if not os.path.isfile(final_path) or not keep_existing_tx:
                 # exec maektx
-                await self.exec_make_tx(file, final_path, logger)
+                await self.exec_make_tx(file, final_path)
 
             # test if export completed and set texture data
             if os.path.isfile(final_path):
