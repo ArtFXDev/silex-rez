@@ -1,8 +1,8 @@
 from __future__ import annotations
+from importlib.resources import path
 
 import typing
 from typing import Any, Dict, List
-
 
 # Forward references
 if typing.TYPE_CHECKING:
@@ -34,7 +34,12 @@ class TextureToTx(CommandBase):
             "label": "Keep existing tx",
             "type": bool,
             "value": False,
-        }
+        },
+        "file_paths": {
+            "label": "Input file paths",
+            "type": dict,
+            "value": {},
+        },
     }
 
     async def prompt_filepath(self, file_paths: List[str], action_query: ActionQuery):
@@ -64,13 +69,25 @@ class TextureToTx(CommandBase):
             for node in cmds.ls(type="file")
         }
 
+    def get_aces_file_path(self, file_nodes_paths) -> Dict[str, Dict[str,str]]:
+        """
+        Return texturepath for each maya node file
+        """
+        return {
+            { 
+                attr: path,
+                "aces": cmds.getAttr(f"{attr}.colorSpace")
+            }
+            for attr, path in file_nodes_paths
+        }
+
     def get_expand_path(self, file_path: Path) -> Dict[str, str]:
         """
         return expand_path from utils
         """
         return files.expand_path(file_path)
 
-    def get_version_path(self, file_path: str):
+    def get_version_path(self, file_path: str, logger):
         """
         Search and return the version folder.
         Like this: P:/test_pipe/shots/s01/p010/storyboard_main/publish/v000
@@ -80,6 +97,9 @@ class TextureToTx(CommandBase):
         ext = file_path.suffix
         ext = ext.replace(".", "")
         expand_path = self.get_expand_path(file_path)
+        logger.error(file_path)
+        logger.error(expand_path)
+
         ext = expand_path["OutputType"]
         version_path = file_path.parent
 
@@ -117,24 +137,40 @@ class TextureToTx(CommandBase):
 
         # get paramters
         keep_existing_tx = parameters["keep_existing_tx"]
+        file_nodes_paths = parameters["file_paths"]
 
-        # Export obj to fbx
-        file_nodes_paths = await execute_in_main_thread(self.get_textures_file_path)
-        
+        logger.error("eeeeeee")
+
+        attr = file_nodes_paths["attributes"]
+        path = file_nodes_paths["file_paths"]
+        file_nodes_paths = zip(attr,path)
+
+        # exclude tx
         file_nodes_paths = {
-            n: p for n, p in file_nodes_paths.items() if Path(p["file"]).suffix != ".tx"
+            attr: [p for p in path if p.suffix != ".tx"] for attr, path in file_nodes_paths
         }
 
-        file_paths = [p["file"] for p in file_nodes_paths.values()]
+
+        file_paths = [p for p in file_nodes_paths.values()]
+        file_paths = [str(p) for pl in file_paths for p in pl]
+        logger.error(file_paths)
+
         if len(file_paths) > 0:
             await self.prompt_filepath(file_paths, action_query)
+
+        # fill with aces
+        file_nodes_paths = await self.get_aces_file_path(file_nodes_paths)
+        logger.error(file_nodes_paths)
 
         # prompt path files
         for node, temp_object in file_nodes_paths.items():
             file = temp_object["file"]
             aces = temp_object["aces"]
-            version_path = self.get_version_path(file)
+
+            version_path = self.get_version_path(file, logger)
             expand_path = self.get_expand_path(Path(file))
+            logger.error(expand_path)
+
             out_file_name = Path(file).with_suffix(".tx")
             out_file_name = out_file_name.name
             final_path = version_path / "tx" / expand_path["Name"] / out_file_name
