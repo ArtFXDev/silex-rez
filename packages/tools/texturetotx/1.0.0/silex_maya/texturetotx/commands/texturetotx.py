@@ -1,11 +1,8 @@
 from __future__ import annotations
-from array import array
-from cmath import exp
 
 import typing
 from typing import Any, Dict, List
 
-from importlib_metadata import pathlib
 
 # Forward references
 if typing.TYPE_CHECKING:
