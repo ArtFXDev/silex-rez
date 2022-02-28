@@ -1,8 +1,11 @@
 
 from __future__ import annotations
+from cmath import exp
 
-
+import typing
 from typing import Any, Dict, List
+
+from importlib_metadata import pathlib
 
 # Forward references
 if typing.TYPE_CHECKING:
@@ -14,10 +17,10 @@ from silex_client.utils.parameter_types import TextParameterMeta
 from silex_client.action.parameter_buffer import ParameterBuffer
 from silex_client.action.command_base import CommandBase
 from silex_client.utils import command_builder
+from silex_client.utils import files
 
 import subprocess
 import logging
-import typing
 import os
 from pathlib import Path
 
@@ -40,11 +43,15 @@ class TextureToTx(CommandBase):
     def get_textures_file_path(self):
         return { node: cmds.getAttr(f"{node}.fileTextureName") for node in cmds.ls(type="file")  }
     
+    def get_expand_path(self, file_path: Path):
+        return files.expand_path(file_path)
+
     def get_version_path(self, file_path: str):
         file_path = Path(file_path)
         ext = file_path.suffix
         ext = ext.replace('.','')
-        ext = ext[:2] # todo
+        expand_path = self.get_expand_path(file_path)
+        ext = expand_path["OutputType"]
         version_path = file_path.parent
 
         while len(version_path.parents) > 1 and ext not in version_path.stem:
@@ -64,9 +71,8 @@ class TextureToTx(CommandBase):
             .value(input_file)
         )
 
-        logger.error("qsqslkqjdlkqsdlqjds")
         await thread_client.execute_in_thread(
-            subprocess.call, batch_cmd.as_argv(), shell=False
+            subprocess.call, batch_cmd.as_argv(), shell=True
         )
 
     @CommandBase.conform_command()
@@ -88,16 +94,16 @@ class TextureToTx(CommandBase):
 
         # prompt path files
         for node, file in file_nodes_paths.items():
-            version_folder = self.get_version_path(file)
+            version_path = self.get_version_path(file)
+            expand_path = self.get_expand_path(Path(file))
             out_file_name = Path(file).with_suffix(".tx")
             out_file_name = out_file_name.name
-            final_path = version_folder / "tx" /  out_file_name
+            final_path = version_path / "tx" / expand_path["Name"] / out_file_name
             logger.error(final_path)
 
         # exec maektx
         await self.exec_make_tx(file, final_path, logger)
-        
-        logger.error(final_path)
+
         # set file attribute
         if os.path.isfile(final_path):
             await execute_in_main_thread(self.set_file_texture_attribute, node, file)
