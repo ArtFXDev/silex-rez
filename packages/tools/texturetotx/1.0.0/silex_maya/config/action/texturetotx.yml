@@ -1,0 +1,10 @@
+texturetotx:
+  thumbnail: "textureBakeSet.svg"
+  label: "Text to tx"
+  steps:
+    texturetotx:
+      index: 50
+      commands:
+        texturetotx:
+          path: "texturetotx.commands.texturetotx.TextureToTx"
+          ask_user: True
