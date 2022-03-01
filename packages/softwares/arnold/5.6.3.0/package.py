@@ -2,8 +2,10 @@ name = "arnold"
 version = "5.6.3.0"
 
 variants = [
-    ["houdini"],
-    ["maya"]
+    ["platform-windows", "maya"],
+    ["platform-windows", "houdini"],
+    ["platform-linux", "maya"],
+    ["platform-linux", "houdini"],
 ]
 
 def commands():
