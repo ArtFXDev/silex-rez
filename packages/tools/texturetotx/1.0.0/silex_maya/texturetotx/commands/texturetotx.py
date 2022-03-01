@@ -1,5 +1,4 @@
 from __future__ import annotations
-from importlib.resources import path
 
 import typing
 from typing import Any, Dict, List
@@ -19,6 +18,7 @@ from silex_client.utils import files
 import subprocess
 import logging
 import os
+import asyncio
 from pathlib import Path
 
 from maya import cmds
@@ -101,7 +101,7 @@ class TextureToTx(CommandBase):
         """
         cmds.setAttr(f"{node}.{attribute}", value, type="string")
 
-    async def exec_make_tx(self, input_file: str, out_file: str):
+    async def exec_make_tx(self, input_file: str, out_file: str, attr, aces):
         """
         Launch the maketx process to convert tx in background
         """
@@ -114,6 +114,16 @@ class TextureToTx(CommandBase):
             subprocess.call, batch_cmd.as_argv(), shell=True
         )
 
+        # test if export completed and set texture data
+        if os.path.isfile(out_file):
+            await execute_in_main_thread(
+                self.set_texture_attribute, "fileTextureName", attr, out_file
+            )
+            await execute_in_main_thread(
+                self.set_texture_attribute, "colorSpace", attr, aces
+            )
+        
+
     @CommandBase.conform_command()
     async def __call__(
         self,
@@ -125,6 +135,9 @@ class TextureToTx(CommandBase):
         # get paramters
         keep_existing_tx = parameters["keep_existing_tx"]
         file_nodes_paths = parameters["file_paths"]
+
+        
+        execution_task = []
 
         attr = file_nodes_paths["attributes"]
         path = file_nodes_paths["file_paths"]
@@ -182,13 +195,13 @@ class TextureToTx(CommandBase):
                 # If keep existing and tx already exist
                 if not os.path.isfile(final_path) or not keep_existing_tx:
                     # exec maektx
-                    await self.exec_make_tx(str(path), final_path)
-
-                # test if export completed and set texture data
-                if os.path.isfile(final_path):
-                    await execute_in_main_thread(
-                        self.set_texture_attribute, "fileTextureName", attr, final_path
-                    )
-                    await execute_in_main_thread(
-                        self.set_texture_attribute, "colorSpace", attr, aces
-                    )
+                    task = asyncio.create_task(self.exec_make_tx(str(path), final_path, attr, aces))
+                    execution_task.append(task)
+                    
+                if len(execution_task) > 10:
+                    await asyncio.gather(*execution_task)
+                    execution_task = []
+        
+        # empty other objects
+        await asyncio.gather(*execution_task)
+        
