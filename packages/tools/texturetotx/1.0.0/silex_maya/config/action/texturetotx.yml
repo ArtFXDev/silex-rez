@@ -5,6 +5,22 @@ texturetotx:
     texturetotx:
       index: 50
       commands:
+        get_references:
+          label: "Get referenced files"
+          path: "silex_maya.commands.get_references.GetReferences"
+          parameters:
+            skip_existing_conformed_file: false
+            included_extensions: 
+              - tiff
+              - png
+              - jpeg
+              - jpg
+              - exr
+              - tga
         texturetotx:
           path: "texturetotx.commands.texturetotx.TextureToTx"
           ask_user: True
+          parameters:
+            file_paths:
+              value: !command-output "texturetotx:get_references"
+              hide: true

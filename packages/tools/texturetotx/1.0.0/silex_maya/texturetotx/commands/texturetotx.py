@@ -1,11 +1,7 @@
 from __future__ import annotations
-from array import array
-from cmath import exp
 
 import typing
 from typing import Any, Dict, List
-
-from importlib_metadata import pathlib
 
 # Forward references
 if typing.TYPE_CHECKING:
@@ -22,6 +18,7 @@ from silex_client.utils import files
 import subprocess
 import logging
 import os
+import asyncio
 from pathlib import Path
 
 from maya import cmds
@@ -37,7 +34,12 @@ class TextureToTx(CommandBase):
             "label": "Keep existing tx",
             "type": bool,
             "value": False,
-        }
+        },
+        "file_paths": {
+            "label": "Input file paths",
+            "type": dict,
+            "value": {},
+        },
     }
 
     async def prompt_filepath(self, file_paths: List[str], action_query: ActionQuery):
@@ -55,17 +57,18 @@ class TextureToTx(CommandBase):
 
         await self.prompt_user(action_query, {"info": info_parameter})
 
-    def get_textures_file_path(self) -> Dict[str, Dict[str,str]]:
+    async def get_aces_file_path(self, file_nodes_paths) -> Dict[str, Dict[str,str]]:
         """
         Return texturepath for each maya node file
         """
-        return {
-            node: {
-                "file": cmds.getAttr(f"{node}.fileTextureName"),
-                "aces": cmds.getAttr(f"{node}.colorSpace"),
+        return [
+            { 
+                "paths": obj["paths"],
+                "attr": obj["attr"],
+                "aces": cmds.getAttr(f"{obj['attr']}.colorSpace")
             }
-            for node in cmds.ls(type="file")
-        }
+            for obj in file_nodes_paths
+        ]
 
     def get_expand_path(self, file_path: Path) -> Dict[str, str]:
         """
@@ -73,16 +76,17 @@ class TextureToTx(CommandBase):
         """
         return files.expand_path(file_path)
 
-    def get_version_path(self, file_path: str):
+    def get_version_path(self, file_path: Path, logger):
         """
         Search and return the version folder.
         Like this: P:/test_pipe/shots/s01/p010/storyboard_main/publish/v000
         """
-
-        file_path = Path(file_path)
         ext = file_path.suffix
         ext = ext.replace(".", "")
         expand_path = self.get_expand_path(file_path)
+        logger.error(file_path)
+        logger.error(expand_path)
+
         ext = expand_path["OutputType"]
         version_path = file_path.parent
 
@@ -97,7 +101,7 @@ class TextureToTx(CommandBase):
         """
         cmds.setAttr(f"{node}.{attribute}", value, type="string")
 
-    async def exec_make_tx(self, input_file: str, out_file: str):
+    async def exec_make_tx(self, input_file: str, out_file: str, attr, aces):
         """
         Launch the maketx process to convert tx in background
         """
@@ -110,6 +114,16 @@ class TextureToTx(CommandBase):
             subprocess.call, batch_cmd.as_argv(), shell=True
         )
 
+        # test if export completed and set texture data
+        if os.path.isfile(out_file):
+            await execute_in_main_thread(
+                self.set_texture_attribute, "fileTextureName", attr, out_file
+            )
+            await execute_in_main_thread(
+                self.set_texture_attribute, "colorSpace", attr, aces
+            )
+        
+
     @CommandBase.conform_command()
     async def __call__(
         self,
@@ -120,44 +134,74 @@ class TextureToTx(CommandBase):
 
         # get paramters
         keep_existing_tx = parameters["keep_existing_tx"]
+        file_nodes_paths = parameters["file_paths"]
 
-        # Export obj to fbx
-        file_nodes_paths = await execute_in_main_thread(self.get_textures_file_path)
         
-        file_nodes_paths = {
-            n: p for n, p in file_nodes_paths.items() if Path(p["file"]).suffix != ".tx"
-        }
+        execution_task = []
 
-        file_paths = [p["file"] for p in file_nodes_paths.values()]
+        attr = file_nodes_paths["attributes"]
+        path = file_nodes_paths["file_paths"]
+        file_nodes_paths = zip(attr,path)
+
+        # exclude tx
+        file_nodes_paths = [
+            {   
+                "paths": [p for p in path if p.suffix != ".tx"],
+                "attr": attr.split(".")[0]
+            } for attr, path in file_nodes_paths
+        ]
+
+
+        file_paths = [p["paths"] for p in file_nodes_paths]
+        file_paths = [str(p) for pl in file_paths for p in pl]
+        logger.error(file_paths)
+
         if len(file_paths) > 0:
             await self.prompt_filepath(file_paths, action_query)
 
+        # fill with aces
+        logger.error(file_nodes_paths)
+        file_nodes_paths = await self.get_aces_file_path(file_nodes_paths)
+        logger.error(file_nodes_paths)
+
         # prompt path files
-        for node, temp_object in file_nodes_paths.items():
-            file = temp_object["file"]
+        for temp_object in file_nodes_paths:
+            paths = temp_object["paths"]
+            attr = temp_object["attr"]
             aces = temp_object["aces"]
-            version_path = self.get_version_path(file)
-            expand_path = self.get_expand_path(Path(file))
-            out_file_name = Path(file).with_suffix(".tx")
-            out_file_name = out_file_name.name
-            final_path = version_path / "tx" / expand_path["Name"] / out_file_name
-            logger.error(final_path)
-            logger.error(os.path.isfile(final_path))
+            logger.error(paths)
+            logger.error(attr)
+            logger.error(aces)
+            for path in paths:
+                
+                expand_path = self.get_expand_path(path)
+                logger.error(expand_path)
 
-             # create out dir if not exist
-            if not os.path.exists(final_path.parent):
-                os.makedirs(final_path.parent)
+                out_file_name = path.with_suffix(".tx")
 
-            # If keep existing and tx already exist
-            if not os.path.isfile(final_path) or not keep_existing_tx:
-                # exec maektx
-                await self.exec_make_tx(file, final_path)
+                if files.is_valid_pipeline_path(path):
+                    version_path = self.get_version_path(path, logger)
+                    final_path = version_path / "tx" / expand_path["Name"] / out_file_name
+                else:
+                    final_path = path.parent / out_file_name.name
 
-            # test if export completed and set texture data
-            if os.path.isfile(final_path):
-                await execute_in_main_thread(
-                    self.set_texture_attribute, "fileTextureName", node, final_path
-                )
-                await execute_in_main_thread(
-                    self.set_texture_attribute, "colorSpace", node, aces
-                )
+                logger.error(final_path)
+                logger.error(os.path.isfile(final_path))
+
+                # create out dir if not exist
+                if not os.path.exists(final_path.parent):
+                    os.makedirs(final_path.parent)
+
+                # If keep existing and tx already exist
+                if not os.path.isfile(final_path) or not keep_existing_tx:
+                    # exec maektx
+                    task = asyncio.create_task(self.exec_make_tx(str(path), final_path, attr, aces))
+                    execution_task.append(task)
+                    
+                if len(execution_task) > 20:
+                    await asyncio.gather(*execution_task)
+                    execution_task = []
+        
+        # empty other objects
+        await asyncio.gather(*execution_task)
+        
