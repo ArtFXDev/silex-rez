@@ -214,15 +214,27 @@ def set_overrides(args, rop_node):
             rop_node.parm("copoutput").set(args.o_option)
         else:
             output_file_parm = "vm_picture"
+            rop_type = rop_node.type().name()
 
             # V-Ray ROP
-            if rop_node.type().name() == "vray_renderer":
+            if rop_type == "vray_renderer":
                 output_file_parm = "SettingsOutput_img_file_path"
 
             # Redshift
-            if rop_node.type().name() == "Redshift_ROP":
+            if rop_type == "Redshift_ROP":
                 hou.hscript("Redshift_setLogLevel -L 5")
                 output_file_parm = "RS_outputFileNamePrefix"
+
+            # USD ROP
+            if rop_type == "usd_rop":
+                output_file_parm = "lopoutput"
+                rop_node.parm("fileperframe").set(True)
+                rop_node.parm("alfprogress").set(True)
+
+            # Mantra
+            if rop_type == "ifd":
+                rop_node.parm("vm_alfprogress").set(True)
+                rop_node.parm("vm_verbose").set(3)
 
             rop_node.parm(output_file_parm).set(args.o_option.replace("\\", "/"))
 
@@ -262,6 +274,10 @@ def is_frame_skipped(o_option, frame):
     return False
 
 
+def print_alfred_progress(p):
+    print("TR_PROGRESS {}%".format(str(p)).zfill(3))
+
+
 def render(args):
     frames = list(map(int, args.frames.split(";")))
 
@@ -271,6 +287,8 @@ def render(args):
             sys.exit(0)
 
     log_message("LOADING FILE: {}".format(args.file))
+    print_alfred_progress(0)
+
     before_load_time = datetime.now()
     try:
         hou.hipFile.load(args.file)
@@ -304,7 +322,7 @@ def render(args):
 
     log_message("START RENDERING")
 
-    for frame in frames:
+    for index, frame in enumerate(frames):
         before_frame = datetime.now()
         if args.skip_existing and is_frame_skipped(args.o_option, frame):
             continue
@@ -314,9 +332,12 @@ def render(args):
                 verbose=bool(args.v_option),
                 frame_range=(frame, frame, 1),
                 method=interleave,
+                output_progress=True,
             )
+
+            print_alfred_progress((index / len(frames)) * 100)
         except Exception as e:
-            print("ROP node render Exception found: {e}".format(e))
+            print("ROP node render Exception found: {e}".format(e=e))
             sys.exit(-1)
 
         after_frame = datetime.now()
