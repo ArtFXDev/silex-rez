@@ -8,10 +8,11 @@ def main():
     file = args.file
 
     hou.hipFile.load(file)
-    render_nodes = [rn.path() for rn in hou.node("/out").allSubChildren()]
+    render_nodes = [
+        rn.path() for rn in hou.node("/").recursiveGlob("*", hou.nodeTypeFilter.Rop)
+    ]
     print(render_nodes)
 
 
 if __name__ == "__main__":
     main()
-
