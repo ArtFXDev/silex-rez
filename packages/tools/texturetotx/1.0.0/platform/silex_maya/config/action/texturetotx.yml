@@ -11,12 +11,14 @@ texturetotx:
           parameters:
             skip_existing_conformed_file: false
             included_extensions: 
-              - tiff
-              - png
-              - jpeg
-              - jpg
-              - exr
-              - tga
+              - .tiff
+              - .png
+              - .jpeg
+              - .jpg
+              - .exr
+              - .tga
+            excluded_extensions:
+              - .ma
         texturetotx:
           path: "texturetotx.commands.texturetotx.TextureToTx"
           ask_user: True

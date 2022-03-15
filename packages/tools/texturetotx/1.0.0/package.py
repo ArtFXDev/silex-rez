@@ -4,7 +4,11 @@ version = "1.0.0"
 
 authors = ["ArtFx TD gang"]
 
-variants = [["silex_client"], ["silex_maya"], ["silex_houdini"]]
+variants = [
+    ["platform"],
+    ["platform", "silex_maya"],
+    ["platform", "silex_houdini"]
+]
 
 requires = [
     "maketx",

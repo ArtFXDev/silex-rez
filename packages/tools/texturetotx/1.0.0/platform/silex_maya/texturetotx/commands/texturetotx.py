@@ -202,7 +202,7 @@ class TextureToTx(CommandBase):
                 if len(execution_task) > 10:
                     await asyncio.gather(*execution_task)
                     execution_task = []
-        
+                break
         # empty other objects
         await asyncio.gather(*execution_task)
         
