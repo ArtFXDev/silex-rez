@@ -28,3 +28,4 @@ def commands():
 
     #MOPS
     env.HOUDINI_PATH.append("C:/Users/etudiant/Documents/houdini18.5/MOPS")
+    env.SILEX_SIMPLE_MODE = "1"

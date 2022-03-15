@@ -7,6 +7,7 @@ authors = ['ArtFx TD gang']
 requires = [
     'vray',
     'aces',
+    # "vray_sdk",
 ]
 
 timestamp = 1635410671
@@ -23,3 +24,4 @@ def commands():
     env.PATH.prepend("C:/ProgramData/redshift/bin")
     env.HOUDINI_PATH.append("C:/ProgramData/redshift/Plugins/Houdini/18.5.596")
     env.HOUDINI_PATH.append("//prod.silex.artfx.fr/rez/houdini/skyrace_tools/")
+    env.SILEX_SIMPLE_MODE = "1"

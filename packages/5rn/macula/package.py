@@ -7,6 +7,7 @@ authors = ['ArtFx TD gang']
 requires = [
     'vray',
     'aces',
+    'substance_plugin',
 ]
 
 timestamp = 1635410671

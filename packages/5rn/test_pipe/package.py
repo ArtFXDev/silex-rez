@@ -8,6 +8,8 @@ requires = [
     "vray",
     "aces",
     "texturetotx",
+    "vray_sdk",
+    "substance_plugin",
 ]
 
 timestamp = 1635410671
@@ -21,3 +23,5 @@ def commands():
     # Houdini Redshift
     env.PATH.prepend("C:/ProgramData/redshift/bin")
     env.HOUDINI_PATH.append("C:/ProgramData/redshift/Plugins/Houdini/18.5.596")
+
+    env.ARNOLD_PLUGIN_PATH.append(r"\\prod.silex.artfx.fr\rez\arnold\watchers\shaders")

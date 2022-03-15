@@ -15,3 +15,6 @@ timestamp = 1635410671
 vcs = 'git'
 
 format_version = 2
+
+def commands():
+    env.PYTHONPATH.append(r"C:\Users\etudiant\Documents\Megascans Library\support\plugins\maya\6.8\MSLiveLink")

@@ -4,7 +4,7 @@ version = "1.0"
 
 authors = ["ArtFx TD gang"]
 
-variants = [["silex_client"], ["silex_maya"], ["silex_houdini"]]
+variants = [["maya"], ["houdini"], ["nuke"], ["silex_client"], ["silex_maya"], ["silex_houdini"]]
 
 requires = [
     "vray",
@@ -21,3 +21,4 @@ format_version = 2
 def commands():
     env.SILEX_ACTION_CONFIG.append("{root}/config")
     env.PYTHONPATH.append("{root}")
+    env.SILEX_SIMPLE_MODE = "1"
