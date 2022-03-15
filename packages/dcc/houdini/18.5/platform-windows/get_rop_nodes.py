@@ -1,17 +1,23 @@
 import argparse
-
+import json
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--file", "-f", help="file path", type=str)
+    parser.add_argument("--hip", "-hip", help="Houdini scene path", type=str)
+    parser.add_argument("--tmp", "-tmp", help="Temporary file to write to", type=str)
     args = parser.parse_args()
-    file = args.file
 
-    hou.hipFile.load(file)
+    hip_file = args.hip
+    hou.hipFile.load(hip_file)
+
     render_nodes = [
         rn.path() for rn in hou.node("/").recursiveGlob("*", hou.nodeTypeFilter.Rop)
     ]
-    print(render_nodes)
+
+    print(args.tmp)
+
+    with open(args.tmp, "w") as f:
+        f.write(json.dumps(render_nodes))
 
 
 if __name__ == "__main__":
