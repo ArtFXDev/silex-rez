@@ -18,8 +18,8 @@ def _maxon_single_command(parameters):
         text=True,
     )
     response, responseError = maxonLoginProcess.communicate()
-    print(f"Response: {response}")
-    print(f"Response error: {responseError}")
+    # print(f"Response: {response}")
+    # print(f"Response error: {responseError}")
     maxonLoginProcess.kill()
     return response, responseError
 

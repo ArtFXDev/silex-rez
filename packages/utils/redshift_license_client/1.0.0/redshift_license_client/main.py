@@ -11,6 +11,7 @@ from .ioUtils import (
     server_list_licenses,
     server_release_license_key,
     server_remove_license,
+    config_folder_path,
 )
 from .maxon.License import MAXON_LICENSE
 from .maxon.LicenseHandler import (
@@ -29,6 +30,8 @@ LICENSE_SERVER_ADDR = ("192.168.2.111", 8888)
 
 def activate_license():
 
+    print(config_folder_path())
+
     activeLicenseKey = get_active_license_key()
 
     if not activeLicenseKey:
@@ -37,17 +40,18 @@ def activate_license():
     save_active_license_key(activeLicenseKey)
 
     user_info = maxon_userInfo()
-    print(f"User info: {user_info}")
+    #print(f"User info: {user_info}")
 
     if user_info is None:
         licenseInfo = server_get_license_info(LICENSE_SERVER_ADDR, activeLicenseKey)
-        # print(licenseInfo)
         if not maxon_login(licenseInfo["USER"], licenseInfo["PASSWORD"]):
             raise RuntimeError("Could not login to maxon server")
 
     if not maxon_license_list()[MAXON_LICENSE["STUDENT"]].active:
         if not maxon_license_assign(MAXON_LICENSE["STUDENT"]):
             raise RuntimeError("Unable to assign license")
+
+    print(maxon_userInfo())
 
     print("License aquried")
 
