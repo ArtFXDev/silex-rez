@@ -7,18 +7,12 @@ requires = [
 
 
 tools = [
-    "designer",
     "fcheck",
-    "imconvert",
     "imgcvt",
-    "lconvert",
     "maya",
     "mayabatch",
     "mayapy",
-    "pyside2-rcc",
     "rcc",
-    "shiboken2",
-    "uconv",
     "uic",
 ]
 

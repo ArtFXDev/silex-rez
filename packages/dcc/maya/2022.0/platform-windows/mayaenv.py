@@ -1,8 +1,7 @@
 def commands(env, root):
     # Set this variable to your maya install path
     maya_install_path = "C:/Maya2022/Maya2022"
-    env.PYTHONPATH.append("//marvin/installers/WIN/AnimBot")  # noqa
-
+    env.PYTHONPATH.append(r"//multifct/tools/Softwares/AnimBot")  # noqa
     env.PATH.append(f"{maya_install_path}/bin")  # noqa
     #env.PYTHONPATH.append(f"{maya_install_path}/Python37/Lib/site-packages")  # noqa
     #env.QT_PLUGIN_PATH.append(f"{maya_install_path}/qt-plugins")  # noqa
