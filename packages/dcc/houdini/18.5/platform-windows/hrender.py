@@ -222,7 +222,7 @@ def set_overrides(args, rop_node):
 
             # Redshift
             if rop_type == "Redshift_ROP":
-                hou.hscript("Redshift_setLogLevel -L 5")
+                hou.hscript("Redshift_setLogLevel -L 4")
                 output_file_parm = "RS_outputFileNamePrefix"
 
             # USD ROP

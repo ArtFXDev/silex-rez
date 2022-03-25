@@ -7,7 +7,8 @@ authors = ['ArtFx TD gang']
 requires = [
     'vray',
     'aces',
-    # "vray_sdk",
+    "vray_sdk",
+    "dmnk_tools"
 ]
 
 timestamp = 1635410671

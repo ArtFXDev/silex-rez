@@ -4,7 +4,7 @@ import pathlib
 from datetime import datetime
 
 # Global object holding progress information
-CONTEXT = {"progress": 0.0, "total_frames": 0}
+CONTEXT = {"progress": 0.0, "total_frames": 0, "last_progress": 0}
 
 TIME_DURATION_UNITS = (
     ("week", 60 * 60 * 24 * 7),
@@ -41,8 +41,10 @@ def print_alfred_progress(p):
 def printProgress(renderer, message, progress, total, instant):
     progress = round(100.0 * progress / total) if total != 0 else 0
 
-    if progress - (progress // 5) * 5 <= 1:
+    if progress % 5 == 0 and CONTEXT["last_progress"] != progress:
         log("progress", "{0} {1}%".format(message, progress))
+
+        CONTEXT["last_progress"] = progress
 
         if message == "Rendering image...":
             sequence_progress = CONTEXT["progress"] + (
@@ -88,7 +90,9 @@ def frame_already_exist(args, i):
 
 def get_frames(args):
     """Returns the list of frames to render"""
-    return list(set(map(int, args.frames.split(";"))))
+    frames = list(set(map(int, args.frames.split(";"))))
+    frames.sort()
+    return frames
 
 
 def check_all_frames_existing(args):
@@ -229,6 +233,15 @@ def main():
     )
 
     args = parser.parse_args()
+
+    if not os.path.exists(args.sceneFile):
+        import sys
+
+        log(
+            "error",
+            f"SCENE FILE {args.sceneFile.as_posix()} DOES NOT EXIST, ABORTING RENDER...",
+        )
+        sys.exit(-1)
 
     render(args)
 
