@@ -147,6 +147,8 @@ def render(args):
             f"{args.imgFile.with_suffix('')}.{str(frame).zfill(4)}{args.imgFile.suffix}"
         )
 
+        plugin_libraries = [l for ll in args.pluginLibraries for l in ll]
+
         kick_command = [
             "kick",
             "-dw",
@@ -157,7 +159,7 @@ def render(args):
             f"-set driver_exr.filename {output_file}",
             f"-o {output_file}",
             f"-i {ass_sequence.frame(frame)}",
-        ]
+        ] + [f"-l {lib}" for lib in plugin_libraries]
 
         progress = (i / len(frames_to_render)) * 100
         print_alfred_progress(progress)
@@ -223,6 +225,12 @@ def main():
     )
     parser.add_argument(
         "-imgFile", help="Output image file path", type=pathlib.Path, required=True
+    )
+    parser.add_argument(
+        "-pluginLibraries",
+        action="append",
+        help="Folder for dlls plugins to be loaded by Arnold",
+        nargs="*",
     )
 
     args = parser.parse_args()
