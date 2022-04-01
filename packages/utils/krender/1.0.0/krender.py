@@ -147,8 +147,6 @@ def render(args):
             f"{args.imgFile.with_suffix('')}.{str(frame).zfill(4)}{args.imgFile.suffix}"
         )
 
-        plugin_libraries = [l for ll in args.pluginLibraries for l in ll]
-
         kick_command = [
             "kick",
             "-dw",
@@ -159,7 +157,11 @@ def render(args):
             f"-set driver_exr.filename {output_file}",
             f"-o {output_file}",
             f"-i {ass_sequence.frame(frame)}",
-        ] + [f"-l {lib}" for lib in plugin_libraries]
+        ]
+        
+        if args.pluginLibraries:
+            plugin_libraries = [l for ll in args.pluginLibraries for l in ll]
+            kick_command += [f"-l {lib}" for lib in plugin_libraries]
 
         progress = (i / len(frames_to_render)) * 100
         print_alfred_progress(progress)

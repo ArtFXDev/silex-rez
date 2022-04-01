@@ -236,7 +236,11 @@ def set_overrides(args, rop_node):
                 rop_node.parm("vm_alfprogress").set(True)
                 rop_node.parm("vm_verbose").set(3)
 
-            rop_node.parm(output_file_parm).set(args.o_option.replace("\\", "/"))
+            output_parm = rop_node.parm(output_file_parm)
+            if output_parm is not None:
+                rop_node.parm(output_file_parm).set(args.o_option.replace("\\", "/"))
+            else:
+                print("WARNING: Could not set output file path: using existing output path")
 
     # Add image processing fraction.
     if args.b_option:

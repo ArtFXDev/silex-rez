@@ -25,3 +25,6 @@ def commands():
     env.HOUDINI_PATH.append("C:/ProgramData/redshift/Plugins/Houdini/18.5.596")
 
     env.ARNOLD_PLUGIN_PATH.append(r"\\prod.silex.artfx.fr\rez\arnold\watchers\shaders")
+
+    env.PATH.append("C:/Users/etudiant/htoa/htoa-5.6.3.0_ra766b1f_houdini-18.5.596/htoa-5.6.3.0_ra766b1f_houdini-18.5.596/scripts/bin")
+    env.HOUDINI_PATH.append("C:/Users/etudiant/htoa/htoa-5.6.3.0_ra766b1f_houdini-18.5.596/htoa-5.6.3.0_ra766b1f_houdini-18.5.596")
