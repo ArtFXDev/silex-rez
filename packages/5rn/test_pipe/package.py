@@ -1,30 +1,22 @@
 # -*- coding: utf-8 -*-
-name = "test_pipe"
-version = "1.0"
+name = 'quit_smoking'
+version = '1.0'
 
-authors = ["ArtFx TD gang"]
+authors = ['ArtFx TD gang']
+
+variants = [["maya"], ["houdini"], ["nuke"], ["silex_client"], ["silex_maya"], ["silex_houdini"]]
 
 requires = [
-    "vray",
-    "aces",
+    'vray',
+    'aces',
     "texturetotx",
-    "vray_sdk",
-    "substance_plugin",
 ]
 
 timestamp = 1635410671
 
-vcs = "git"
+vcs = 'git'
 
 format_version = 2
 
-
 def commands():
-    # Houdini Redshift
-    env.PATH.prepend("C:/ProgramData/redshift/bin")
-    env.HOUDINI_PATH.append("C:/ProgramData/redshift/Plugins/Houdini/18.5.596")
-
-    env.ARNOLD_PLUGIN_PATH.append(r"\\prod.silex.artfx.fr\rez\arnold\watchers\shaders")
-
-    env.PATH.append("C:/Users/etudiant/htoa/htoa-5.6.3.0_ra766b1f_houdini-18.5.596/htoa-5.6.3.0_ra766b1f_houdini-18.5.596/scripts/bin")
-    env.HOUDINI_PATH.append("C:/Users/etudiant/htoa/htoa-5.6.3.0_ra766b1f_houdini-18.5.596/htoa-5.6.3.0_ra766b1f_houdini-18.5.596")
+    env.SILEX_ACTION_CONFIG.prepend("{root}/config")

@@ -1,0 +1,9 @@
+vrscene: !inherit
+  parent: "vrscene"
+
+  steps:
+    move:
+      commands:
+        move:
+          parameters:
+            merge: true

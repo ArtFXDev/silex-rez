@@ -8,7 +8,8 @@ requires = [
     'vray',
     'aces',
     "vray_sdk",
-    "dmnk_tools"
+    "dmnk_tools",
+    "megascan_library"
 ]
 
 timestamp = 1635410671

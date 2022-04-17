@@ -20,6 +20,8 @@ def commands():
     env.ARNOLD_PLUGIN_PATH.append(r"\\prod.silex.artfx.fr\rez\arnold\watchers\shaders")
     env.SILEX_SIMPLE_MODE = "1"
 
+    env.PYTHONPATH.append(r"C:\Users\etudiant\Documents\Megascans Library\support\plugins\maya\6.8\MSLiveLink")
+
     if "houdini" in request or "silex_houdini" in request:
         env.HOUDINI_PATH.prepend("C:/Users/etudiant/htoa/htoa-5.6.3.0_ra766b1f_houdini-18.5.596.py3/htoa-5.6.3.0_ra766b1f_houdini-18.5.596.py3")
         env.PATH.prepend("C:/Users/etudiant/htoa/htoa-5.6.3.0_ra766b1f_houdini-18.5.596.py3/htoa-5.6.3.0_ra766b1f_houdini-18.5.596.py3/scripts/bin")
