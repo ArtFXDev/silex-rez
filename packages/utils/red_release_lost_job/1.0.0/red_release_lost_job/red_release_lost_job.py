@@ -1,14 +1,10 @@
+import sys
 from subprocess import PIPE, STDOUT, Popen
 
 import tractor.api.author as author
 
-def job():
-    cmd = "rez env redshift_license_client -- python -m redshift_license_client.main list"
-    p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-    output = p.stdout.read()
-    lines = str(output).split("\\n")
 
-    members = [l.split(" ") for l in lines]
+def job():
     blades = []
 
     skyrace = [
@@ -21,9 +17,21 @@ def job():
         "md13-2021-007",
     ]
 
-    for m in members:
-        if len(m) > 2 and m[2] == "True":
-            blades.append(m[3].rstrip("\\r"))
+    if len(sys.argv) > 1:
+        blades = sys.argv[1:]
+    else:
+        cmd = "rez env redshift_license_client -- python -m redshift_license_client.main list"
+        p = Popen(
+            cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True
+        )
+        output = p.stdout.read()
+        lines = str(output).split("\\n")
+
+        members = [l.split(" ") for l in lines]
+
+        for m in members:
+            if len(m) > 2 and m[2] == "True":
+                blades.append(m[3].rstrip("\\r"))
 
     blades = [b for b in blades if b not in skyrace]
 
@@ -43,6 +51,7 @@ def job():
 
     jid = job.spool(owner="jhenry")
     print(f"JOB SPOOLED {jid}")
+
 
 if __name__ == "__main__":
     job()

@@ -64,7 +64,7 @@ def frame_already_exist(args, i):
     )
     existing = os.path.exists(out_filename)
 
-    if existing and log:
+    if existing:
         log_info(f"FRAME {i} ALREADY EXISTS ({out_filename})")
 
     return existing
@@ -158,7 +158,7 @@ def render(args):
             f"-o {output_file}",
             f"-i {ass_sequence.frame(frame)}",
         ]
-        
+
         if args.pluginLibraries:
             plugin_libraries = [l for ll in args.pluginLibraries for l in ll]
             kick_command += [f"-l {lib}" for lib in plugin_libraries]

@@ -1,3 +1,5 @@
+#!/usr/bin/env hython
+
 from __future__ import print_function
 
 import argparse
@@ -5,7 +7,6 @@ import os
 import sys
 from datetime import datetime
 
-#!/usr/bin/env hython
 
 
 def error(msg, exit=True):

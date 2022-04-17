@@ -12,6 +12,7 @@ texturetotx:
             skip_existing_conformed_file: false
             included_extensions: 
               - .tiff
+              - .tif
               - .png
               - .jpeg
               - .jpg
