@@ -8,7 +8,6 @@ import sys
 from datetime import datetime
 
 
-
 def error(msg, exit=True):
     if msg:
         sys.stderr.write("\n")
@@ -241,7 +240,9 @@ def set_overrides(args, rop_node):
             if output_parm is not None:
                 rop_node.parm(output_file_parm).set(args.o_option.replace("\\", "/"))
             else:
-                print("WARNING: Could not set output file path: using existing output path")
+                print(
+                    "WARNING: Could not set output file path: using existing output path"
+                )
 
     # Add image processing fraction.
     if args.b_option:
@@ -280,7 +281,8 @@ def is_frame_skipped(o_option, frame):
 
 
 def print_alfred_progress(p):
-    print("TR_PROGRESS {}%".format(str(p)).zfill(3))
+    for i in range(2):
+        print("TR_PROGRESS {}%".format(str(p)).zfill(3))
 
 
 def render(args):
