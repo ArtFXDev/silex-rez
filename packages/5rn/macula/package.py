@@ -18,3 +18,7 @@ format_version = 2
 
 def commands():
     env.SILEX_SIMPLE_MODE = "1"
+    
+    # Custom Nuke tools
+    env.NUKE_PATH.append(r"\\prod.silex.artfx.fr\rez\nuke\macula_tools")
+    env.NUKE_PATH.append(r"\\prod.silex.artfx.fr\rez\nuke\NukeSurvivalToolkit")

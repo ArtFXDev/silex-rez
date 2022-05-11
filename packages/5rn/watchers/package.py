@@ -26,3 +26,5 @@ def commands():
         env.HOUDINI_PATH.prepend("C:/Users/etudiant/htoa/htoa-5.6.3.0_ra766b1f_houdini-18.5.596.py3/htoa-5.6.3.0_ra766b1f_houdini-18.5.596.py3")
         env.PATH.prepend("C:/Users/etudiant/htoa/htoa-5.6.3.0_ra766b1f_houdini-18.5.596.py3/htoa-5.6.3.0_ra766b1f_houdini-18.5.596.py3/scripts/bin")
         env.HOUDINI_PATH.append("//prod.silex.artfx.fr/rez/houdini/watchers_tools/")
+
+    env.SILEX_ACTION_CONFIG.prepend("{root}/config")

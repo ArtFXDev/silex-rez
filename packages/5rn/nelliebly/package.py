@@ -4,7 +4,7 @@ version = "1.0"
 
 authors = ["ArtFx TD gang"]
 
-variants = [["maya"], ["houdini"], ["nuke"], ["silex_client"], ["silex_maya"], ["silex_houdini"]]
+variants = [["maya"], ["houdini"], ["nuke"], ["silex_client"], ["silex_maya"], ["silex_houdini"], ["silex_nuke"]]
 
 requires = [
     "vray",

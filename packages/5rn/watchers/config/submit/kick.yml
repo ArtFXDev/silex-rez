@@ -1,0 +1,20 @@
+kick: !inherit
+  parent: "kick"
+
+  steps:
+    kick_render:
+      commands:
+          submit_to_tractor:
+            parameters:
+              blade_blacklist:
+                value:
+                  - BUG
+                  - md6-2016-011
+                  - md7-2016-045
+                  - md7-2016-005
+                  - md9-2018-017
+                  - md7-2016-021
+                  - md7-2016-015
+                  - md7-2016-051
+                  - md7-2016-029
+                  - md7-2016-020
