@@ -1,6 +1,11 @@
 $USER = $env:SERVER_USER
 $PWD = $env:SERVER_PASS
 
+if (($null -eq $env:SERVER_USER) -or ($null -eq $env:SERVER_PASS)) {
+	Write-Output "[ERROR] mount_rd (P:) Please provide SERVER_USER and SERVER_PASS env variables."
+	exit 1
+}
+
 $path = ("\\{0}" -f $args[0])
 $path += "\PIPELINE"
 
