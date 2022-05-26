@@ -64,10 +64,22 @@ def frame_already_exist(args, i):
     )
     existing = os.path.exists(out_filename)
 
-    if existing:
-        log_info(f"FRAME {i} ALREADY EXISTS ({out_filename})")
+    if not existing:
+        return False
 
-    return existing
+    file_size = os.path.getsize(out_filename)
+    file_size_limit = 10000
+    is_empty_frame = file_size <= file_size_limit
+
+    if existing:
+        if is_empty_frame:
+            log_info(
+                f"FRAME {i} IS EMPTY, RE-RENDERING IT (<{file_size_limit} bytes) ({out_filename})"
+            )
+        else:
+            log_info(f"FRAME {i} ALREADY EXISTS ({out_filename})")
+
+    return existing and not is_empty_frame
 
 
 def get_frames(args):
@@ -79,7 +91,9 @@ def get_frames(args):
 
 def check_all_frames_existing(args):
     """Check if all the frames need to be skipped"""
-    if all([frame_already_exist(args, f) for f in get_frames(args)]):
+    frames = get_frames(args)
+
+    if all([frame_already_exist(args, f) for f in frames]):
         import sys
 
         log_info("ALL THE FRAMES WERE SKIPPED")
