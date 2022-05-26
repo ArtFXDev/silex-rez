@@ -8,4 +8,3 @@ def commands(env, root):
     if "FOUNDRY_LICENSE" in env.keys():
         env.FOUNDRY_LICENSE.set(str(env.FOUNDRY_LICENSE))
 
-    env.MARI_SCRIPT_PATH.append("D:/rez/dev_packages/silex_mari/startup")

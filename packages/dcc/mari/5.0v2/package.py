@@ -17,9 +17,8 @@ variants = [
 
 def commands():
     import sys
-    
-    alias("mari", "Mari5.0v2")
 
     sys.path.append(root)
     import marienv
     marienv.commands(env, root)
+    env.SILEX_DCC_BIN = "Mari5.0v2"
