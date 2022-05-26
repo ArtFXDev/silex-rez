@@ -15,8 +15,9 @@ def job():
         "i7-mk11-2020-93",
         "md13-2021-004",
         "md13-2021-007",
-    ]
 
+    ]
+    
     if len(sys.argv) > 1:
         blades = sys.argv[1:]
     else:
@@ -33,7 +34,7 @@ def job():
             if len(m) > 2 and m[2] == "True":
                 blades.append(m[3].rstrip("\\r"))
 
-    blades = [b for b in blades if b not in skyrace]
+        blades = [b for b in blades if b not in skyrace]
 
     print("RELEASING LICENSES")
     print(blades)
@@ -49,7 +50,7 @@ def job():
             service=blade,
         )
 
-    jid = job.spool(owner="jhenry")
+    jid = job.spool(owner="redshift")
     print(f"JOB SPOOLED {jid}")
 
 
