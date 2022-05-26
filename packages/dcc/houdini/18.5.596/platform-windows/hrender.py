@@ -3,6 +3,7 @@
 from __future__ import print_function
 
 import argparse
+import math
 import os
 import sys
 from datetime import datetime
@@ -17,22 +18,26 @@ def error(msg, exit=True):
     sys.stderr.write("\n")
     if exit:
         sys.exit(1)
+        
+        
+TIME_DURATION_UNITS = (
+    ("week", 60 * 60 * 24 * 7),
+    ("day", 60 * 60 * 24),
+    ("hour", 60 * 60),
+    ("min", 60),
+    ("sec", 1),
+)
 
-
-# Taken from https://codereview.stackexchange.com/questions/37285/efficient-human-readable-timedelta
-def readable_timedelta(duration):
-    data = {}
-    data["days"], remaining = divmod(duration.total_seconds(), 86400)
-    data["hours"], remaining = divmod(remaining, 3600)
-    data["minutes"], data["seconds"] = divmod(remaining, 60)
-
-    time_parts = [
-        "{} {}".format(round(value), name) for name, value in data.items() if value > 0
-    ]
-    if time_parts:
-        return " ".join(time_parts)
-    else:
-        return "below 1 second"
+# Taken from https://gist.github.com/borgstrom/936ca741e885a1438c374824efb038b3
+def human_time_duration(seconds):
+    if seconds == 0:
+        return "inf"
+    parts = []
+    for unit, div in TIME_DURATION_UNITS:
+        amount, seconds = divmod(int(seconds), div)
+        if amount > 0:
+            parts.append("{} {}{}".format(amount, unit, "" if amount == 1 else "s"))
+    return ", ".join(parts)
 
 
 def log_message(msg, content="", limit=False):
@@ -282,7 +287,7 @@ def is_frame_skipped(o_option, frame):
 
 def print_alfred_progress(p):
     for i in range(2):
-        print("TR_PROGRESS {}%".format(str(p)).zfill(3))
+        print("TR_PROGRESS {}%".format(str(math.floor(p))).zfill(3))
 
 
 def render(args):
@@ -305,7 +310,7 @@ def render(args):
     after_load_time = datetime.now()
     log_message(
         "FILE LOADED in {}".format(
-            readable_timedelta(after_load_time - before_load_time)
+            human_time_duration((after_load_time - before_load_time).total_seconds())
         ),
     )
 
@@ -342,7 +347,7 @@ def render(args):
                 output_progress=True,
             )
 
-            print_alfred_progress((index / len(frames)) * 100)
+            print_alfred_progress(((index + 1) / len(frames)) * 100)
         except Exception as e:
             print("ROP node render Exception found: {e}".format(e=e))
             sys.exit(-1)
@@ -350,7 +355,7 @@ def render(args):
         after_frame = datetime.now()
         log_message(
             "FRAME {} took {} to render".format(
-                frame, readable_timedelta(after_frame - before_frame)
+                frame, human_time_duration((after_frame - before_frame).total_seconds())
             )
         )
 

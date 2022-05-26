@@ -1,6 +1,6 @@
 def commands(env, root):
-    env.PATH.append(root)
-    env.PYTHONPATH.append(root)
+    env.PATH.prepend(root)
+    env.PYTHONPATH.prepend(root)
     # Set this variable to your houdini install path
     houdini_install_paths = ["C:/Houdini18"]
     houdini_preferences_path = "C:/Users/etudiant/Documents/houdini18.5"
