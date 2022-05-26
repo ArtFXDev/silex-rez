@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-name = 'quit_smoking'
+name = 'test_pipe'
 version = '1.0'
 
 authors = ['ArtFx TD gang']
 
-variants = [["maya"], ["houdini"], ["nuke"], ["silex_client"], ["silex_maya"], ["silex_houdini"], ["silex_nuke"]]
+variants = [["houdini-18"], ["nuke"], ["silex_client"], ["silex_maya"], ["silex_houdini"], ["silex_nuke"], ["silex_mari"]]
 
 requires = [
     'vray',

@@ -8,6 +8,7 @@ kick: !inherit
             parameters:
               blade_blacklist:
                 value:
+                  - DONOTUSE
                   - BUG
                   - md6-2016-011
                   - md7-2016-045
