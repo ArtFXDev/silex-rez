@@ -8,6 +8,12 @@ requires = [
     "vray",
     "aces",
     "texturetotx",
+    "houdini-18"
+]
+
+variants = [
+    ["platform-windows"],
+    ["platform-windows", "houdini-18"],
 ]
 
 timestamp = 1635410671
