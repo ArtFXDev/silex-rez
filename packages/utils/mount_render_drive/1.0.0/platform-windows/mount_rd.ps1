@@ -37,9 +37,4 @@ Write-Output "AFTER MOUNT P"
 net use
 Write-Output "---------------------------------"
 
-Write-Output "LS P"
-ls P:\
-Write-Output "---------------------------------"
-
-
 # New-SmbMapping -LocalPath 'P:' -RemotePath (Convert-Path $path) -UserName $user -Password $PWD
