@@ -3,6 +3,7 @@ version = "5.6.3.0"
 
 tools = [
     "ArnoldLicenseManager",
+    "Arnold",
     "hick",
     "ADPClientService",
     "kick",
