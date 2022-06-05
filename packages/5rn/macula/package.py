@@ -22,3 +22,4 @@ def commands():
     # Custom Nuke tools
     env.NUKE_PATH.append(r"\\prod.silex.artfx.fr\rez\nuke\macula_tools")
     env.NUKE_PATH.append(r"\\prod.silex.artfx.fr\rez\nuke\NukeSurvivalToolkit")
+    env.SILEX_ACTION_CONFIG.prepend("{root}/config")
