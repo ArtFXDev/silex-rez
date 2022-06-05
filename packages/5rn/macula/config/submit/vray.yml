@@ -1,0 +1,10 @@
+vray: !inherit
+  parent: "vray"
+
+  steps:
+    vray_render:
+      commands:
+          build_vray_tasks:
+            parameters:
+              skip_existing:
+                value: false
