@@ -1,0 +1,1 @@
+powershell.exe -ExecutionPolicy Bypass -NoProfile -File %~dp0/mount_marvin_ps.ps1 %*
