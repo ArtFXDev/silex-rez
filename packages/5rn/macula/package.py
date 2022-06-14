@@ -8,6 +8,7 @@ requires = [
     'vray',
     'aces',
     'substance_plugin',
+    'houdini-18'
 ]
 
 timestamp = 1635410671
