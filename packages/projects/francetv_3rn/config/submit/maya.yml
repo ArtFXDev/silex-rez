@@ -1,0 +1,23 @@
+maya: !inherit
+  parent: "maya"
+
+  steps:
+    maya_render:
+      commands:
+        build_maya_tasks:
+          parameters:
+            scene_file_out_of_pipeline:
+              value: true
+            renderer:
+              value: "arnold"
+
+        submit_to_tractor:
+          parameters:
+            blade_blacklist:
+              value:
+                - DONOTUSE
+                - BUG
+                - i7-mk11-2020-53
+            priority:
+              value: 30
+              hide: true
