@@ -3,4 +3,5 @@
 **/__pycache__/
 packages/softwares/vray/4.3
 packages/softwares/vray/4.2
-packages/dcc/blender/3.1.2
+packages/dcc/blender/3.1.2/platform-windows/blender-3.1.2-windows-x64
+packages/dcc/natron/2.4.3/platform-windows/Natron-2.4.3-Windows-x86_64
