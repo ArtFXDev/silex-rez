@@ -169,6 +169,7 @@ def render(args):
             "-nocrashpopup",
             "-nostdin",
             f"-set driver_exr.filename {output_file}",
+            "-set options.abort_on_license_fail on", # Abort on license fail
             f"-o {output_file}",
             f"-i {ass_sequence.frame(frame)}",
         ]
